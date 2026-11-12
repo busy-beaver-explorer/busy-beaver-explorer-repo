@@ -1,0 +1,6 @@
+# Lean build output (tools/lean/check.sh writes .olean files next to the sources)
+out/
+# busycoq, cloned by coq/build.sh
+coq/.busycoq/
+__pycache__/
+*.pyc
