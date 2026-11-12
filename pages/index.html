@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Busy Beaver Explorer</title>
+<meta name="description" content="Two six-state Turing machines that bbchallenge left open, proved never to halt in Lean and in Coq, with pages that run them and walk through the proofs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Martian+Mono:wght@400;500;700&display=swap">
+<style>
+:root {
+  --paper: #EEF1F5; --surface: #FFFFFF; --ink: #142033; --muted: #5A6679; --rule: #D0D8E2; --link: #2B59CF;
+  --kernel: #1F7A4D; --kernel-bg: #E2F3EA;
+  --font-display: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E131A; --surface: #161E29; --ink: #E5EBF3; --muted: #95A2B4; --rule: #2B3644; --link: #7C9DFF;
+    --kernel: #6FD3A0; --kernel-bg: #15301F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E131A; --surface: #161E29; --ink: #E5EBF3; --muted: #95A2B4; --rule: #2B3644; --link: #7C9DFF;
+  --kernel: #6FD3A0; --kernel-bg: #15301F; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 860px; margin: 0 auto; padding: 40px 16px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--font-display); margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(1.45rem, 3.2vw, 2.1rem); line-height: 1.2; }
+h2 { font-size: 1rem; overflow-wrap: anywhere; }
+p { margin: 0; max-width: 72ch; }
+a { color: var(--link); }
+code { font-family: var(--font-display); font-size: 0.86em; overflow-wrap: anywhere; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 18px; display: grid; gap: 10px; }
+.meta { color: var(--muted); font-size: 0.9rem; }
+.tag { display: inline-block; font-size: 0.78rem; padding: 1px 8px; border-radius: 999px; color: var(--kernel); background: var(--kernel-bg); font-weight: 700; margin-right: 6px; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-weight: 700; }
+footer { color: var(--muted); font-size: 0.9rem; display: grid; gap: 8px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+<header style="display:grid;gap:12px">
+ <h1>Busy Beaver Explorer</h1>
+ <p>The <a href="https://bbchallenge.org">bbchallenge</a> project has sorted almost every six-state, two-symbol Turing
+ machine into those that halt from a blank tape and those that never do. A few hundred <i>holdouts</i> are still
+ open. This site covers two of them. Each is proved never to halt twice, once in Lean and once in Coq on top of
+ <a href="https://github.com/meithecatte/busycoq">busycoq</a>. Each has a page that runs the machine in your browser
+ and walks through the proof step by step, and a page that sorts every result by what it rests on.</p>
+</header>
+<section class="card">
+ <h2><code>1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB</code></h2>
+ <p class="meta">bbchallenge machine #113,677</p>
+ <p><span class="tag">never halts</span>Alternates between long phases at the right end, which turn a run of 10 into a run of 1111110 or 1111011, and phases of round trips, which use that run up while runs of 1000 and 10 grow on the left. A table of phase rules is proved in Lean for all sizes, with a rule for every residue of the counts, and a linear invariant on the counts is restored by every rule; Lean and Coq (busycoq) both prove it never halts with the kernel alone.</p>
+ <p class="links"><a href="holdouts/1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB/explainer.html">Explainer and proof walkthrough</a><a href="holdouts/1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB/proof-status.html">What is proved, and how</a><a href="https://github.com/busy-beaver-explorer/busy-beaver-explorer-repo/tree/main/holdouts/1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB">Source</a></p>
+</section>
+<section class="card">
+ <h2><code>1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC</code></h2>
+ <p class="meta">bbchallenge machine #36,670</p>
+ <p><span class="tag">never halts</span>A list of counts written in stretches of 01: each round trip takes 3 from the first count while the rest of the list cycles through one of four periodic patterns, and when the first count runs out the second takes its place; Coq (busycoq) proves it never halts with the kernel alone, and Lean proves it too (kernel rounds, native_decide for the long runs).</p>
+ <p class="links"><a href="holdouts/1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC/explainer.html">Explainer and proof walkthrough</a><a href="holdouts/1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC/proof-status.html">What is proved, and how</a><a href="https://github.com/busy-beaver-explorer/busy-beaver-explorer-repo/tree/main/holdouts/1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC">Source</a></p>
+</section>
+<footer>
+ <p>Everything here is built from the repository <a href="https://github.com/busy-beaver-explorer/busy-beaver-explorer-repo">busy-beaver-explorer/busy-beaver-explorer-repo</a>: the Lean proofs, the Coq
+ proofs, the scripts that generate them and the pages. Its README explains how to check each proof yourself.</p>
+</footer>
+</main>
+</body>
+</html>

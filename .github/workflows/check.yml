@@ -1,0 +1,51 @@
+# Check the proofs and the generated files. Runs on pull requests and pushes to main that touch them, and by hand.
+# A newer push to the same branch cancels a run still in progress.
+name: Check
+
+on:
+  pull_request:
+    paths: ["holdouts/**", "coq/**", "tools/**", "pages/**", "scripts/**", ".github/workflows/check.yml"]
+  push:
+    branches: [main]
+    paths: ["holdouts/**", "coq/**", "tools/**", "pages/**", "scripts/**", ".github/workflows/check.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generated:
+    name: Generated files are current
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh scripts/check_generated.sh
+
+  coq:
+    name: Coq proofs (busycoq)
+    runs-on: ubuntu-24.04          # its coq package is 8.18.0
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -q && sudo apt-get install -y -q coq
+      - run: coqc --version
+      - run: sh coq/build.sh
+
+  lean:
+    name: Lean proofs
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo bash scripts/setup-lean.sh
+      - name: Shared library and its tests
+        run: . /etc/profile.d/lean.sh && tools/lean/check.sh
+      - name: 1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC
+        run: . /etc/profile.d/lean.sh && holdouts/1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC/lean/check.sh
+      - name: 1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB
+        run: . /etc/profile.d/lean.sh && holdouts/1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB/lean/check.sh
